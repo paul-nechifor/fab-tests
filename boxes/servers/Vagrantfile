@@ -1,0 +1,18 @@
+nBoxes = 4
+
+Vagrant.configure("2") do |config|
+  config.vm.box = 'ubuntu/trusty64'
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+
+  (1..nBoxes).each do |i|
+    vmname = "slave#{i}"
+    config.vm.define vmname.to_sym do |slave|
+      slave.vm.host_name = vmname
+      slave.vm.network "private_network", ip: "10.10.10.#{10+i}"
+      slave.vm.provider "virtualbox" do |v|
+        v.memory = 512
+        v.cpus = 1
+      end
+    end
+  end
+end
